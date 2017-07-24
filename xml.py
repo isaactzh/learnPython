@@ -51,3 +51,55 @@ for item in list:
 	print('Name', item.find('name').text)
 	print('id', item.find('id').text)
 	print('Attribute', item.get("x"))
+
+
+
+
+#########3
+import urllib.request, urllib.parse, urllib.error
+import xml.etree.ElementTree as ET
+
+serviceurl = 'http://maps.googleapis.com/maps/api/geocode/xml?'
+
+while True:
+    address = input('Enter location: ')
+    if len(address) < 1: break
+
+    url = serviceurl + urllib.parse.urlencode({'address': address})
+    print('Retrieving', url)
+    uh = urllib.request.urlopen(url)
+    data = uh.read()
+    print('Retrieved', len(data), 'characters')
+    print(data.decode())
+    tree = ET.fromstring(data)
+
+    results = tree.findall('result')
+    lat = results[0].find('geometry').find('location').find('lat').text
+    lng = results[0].find('geometry').find('location').find('lng').text
+    location = results[0].find('formatted_address').text
+
+    print('lat', lat, 'lng', lng)
+    print(location)
+
+
+
+###homework example
+import urllib.request, urllib.parse, urllib.error
+import xml.etree.ElementTree as ET
+while True:
+    address = input('Enter location: ')
+    if len(address) < 1 : break
+    print('Retrieving', address)
+    uh = urllib.request.urlopen(address)
+    data = uh.read()
+    print('Retrieved',len(data),'characters')
+    print(data.decode())
+    tree = ET.fromstring(data)
+    lst = tree.findall('comments/comment')
+    #lst = tree.findall('.//count')
+    print('Count: ', len(lst))
+    num = 0
+    for item in lst:
+        x = item.find('count').text
+        num = num + int(x)
+    print('Sum: ', num)
